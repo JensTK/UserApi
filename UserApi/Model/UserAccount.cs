@@ -1,24 +1,18 @@
 ﻿using Dapper.Contrib.Extensions;
-using System.ComponentModel.DataAnnotations;
+using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UserApi.Model
 {
+    [SwaggerSchema("User account")]
     public class UserAccount : IDbObject
     {
-        [ExplicitKey]
-        [Required]
+        [Key]
+        [SwaggerSchema("User ID", ReadOnly = true)]
+        public int UserId { get; set; }
+        [SwaggerSchema("Username, must be unique")]
         public string UserName { get; set; }
-
-        public string? PasswordHash { get; set; }
+        [SwaggerSchema("Email address")]
         public string? Email { get; set; }
-
-        public UserAccount() { }
-
-        public UserAccount(string UserName, string? PasswordHash = null, string? Email = null)
-        {
-            this.UserName = UserName;
-            this.PasswordHash = PasswordHash;
-            this.Email = Email;
-        }
     }
 }

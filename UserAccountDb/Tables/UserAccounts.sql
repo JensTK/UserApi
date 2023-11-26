@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[UserAccounts]
 (
-	[UserName] NVARCHAR(200) NOT NULL PRIMARY KEY,
-	[PasswordHash] NVARCHAR(200),
-	[Email] NVARCHAR(200),
+	[UserId] INTEGER IDENTITY,
+	[UserName] NVARCHAR(200) NOT NULL UNIQUE,
+	[Email] NVARCHAR(200), 
+    CONSTRAINT [PK_UserAccounts] PRIMARY KEY ([UserId]),
 )

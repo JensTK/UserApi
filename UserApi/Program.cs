@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen(options =>
         Title = "UserAccount API",
         Description = "API for managing user accounts",
     });
+    options.EnableAnnotations();
 });
 
 var app = builder.Build();
@@ -24,6 +25,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
 }
 
 app.UseHttpsRedirection();
