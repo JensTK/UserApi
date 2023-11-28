@@ -10,13 +10,11 @@ namespace UserApi.Controllers
     [SwaggerTag("Manage user accounts")]
     public class UserAccountController : Controller
     {
-        private IConfiguration configuration;
-        public IUserAccountDb UserAccountDb { get; set; }
+        private IUserAccountDb userAccountDb;
 
-        public UserAccountController(IConfiguration configuration)
+        public UserAccountController(IUserAccountDb userAccountDb)
         {
-            configuration = configuration;
-            UserAccountDb = new UserAccountDb(configuration.GetConnectionString("UserAccountDb"));
+            this.userAccountDb = userAccountDb;
         }
 
         [HttpGet]
@@ -29,7 +27,7 @@ namespace UserApi.Controllers
             Debug.WriteLine("GET /users");
             try
             {
-                return Ok(UserAccountDb.GetList<UserAccount>());
+                return Ok(userAccountDb.GetList<UserAccount>());
             }
             catch (Exception ex)
             {
@@ -51,7 +49,7 @@ namespace UserApi.Controllers
             }
             try
             {
-                var account = (userId != null) ? (UserAccountDb.Get<UserAccount, int>((int)userId)) : (UserAccountDb.GetUserAccountByUserName(userName));
+                var account = (userId != null) ? (userAccountDb.Get<UserAccount, int>((int)userId)) : (userAccountDb.GetUserAccountByUserName(userName));
                 if (account == null) {
                     Debug.WriteLine($"Account { userId?.ToString() ?? userName } not found");
                     return BadRequest("Account not found"); 
@@ -75,13 +73,13 @@ namespace UserApi.Controllers
             Debug.WriteLine($"POST /users: {accounts.Count} users");
             try
             {
-                var accountExists = UserAccountDb.GetList<UserAccount>().Where(x => accounts.Select(y => y.UserName).Contains(x.UserName));
+                var accountExists = userAccountDb.GetList<UserAccount>().Where(x => accounts.Select(y => y.UserName).Contains(x.UserName));
                 if (accountExists.Any())
                 {
                     Debug.WriteLine($"Usernames {string.Join(", ", accountExists.Select(x => x.UserName))} already exist");
                     return BadRequest($"Usernames {string.Join(", ", accountExists.Select(x => x.UserName))} already exist");
                 }
-                UserAccountDb.Insert(accounts);
+                userAccountDb.Insert(accounts);
                 return Ok();
             }
             catch (Exception ex)
@@ -104,13 +102,13 @@ namespace UserApi.Controllers
             }
             try
             {
-                var account = (userId != null) ? (UserAccountDb.Get<UserAccount, int>((int)userId)) : (UserAccountDb.GetUserAccountByUserName(userName));
+                var account = (userId != null) ? (userAccountDb.Get<UserAccount, int>((int)userId)) : (userAccountDb.GetUserAccountByUserName(userName));
                 if (account == null)
                 {
                     Debug.WriteLine($"Account {userId?.ToString() ?? userName} not found");
                     return BadRequest("Account not found");
                 }
-                UserAccountDb.Delete(account);
+                userAccountDb.Delete(account);
                 return Ok();
             }
             catch (Exception ex)

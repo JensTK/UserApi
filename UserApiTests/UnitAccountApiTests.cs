@@ -23,8 +23,7 @@ namespace UserApiTests
         public void Setup()
         {
             dbTest = new UserAccountDbMock();
-            userAccountController = new UserAccountController(new ConfigurationBuilder().Build());
-            userAccountController.UserAccountDb = dbTest;
+            userAccountController = new UserAccountController(dbTest);
         }
 
         [Test]

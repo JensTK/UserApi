@@ -1,3 +1,5 @@
+using UserApi.DB;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +19,8 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.EnableAnnotations();
 });
+
+builder.Services.AddSingleton<IUserAccountDb>(db => new UserAccountDb(builder.Configuration.GetConnectionString("UserAccountDb")));
 
 var app = builder.Build();
 
